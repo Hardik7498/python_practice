@@ -137,7 +137,7 @@ print(f"Your current age is {age}")
               
 
 
-# $Exercise password asterisk
+# $Exercise password asterisk   
 u_name = input("\nEnter the username :")
 password = input("Enter the password :")
 
@@ -232,7 +232,7 @@ print("'sorted' is not inPlace :",sorted(eg2))
 print("\nReversing the list")
 print("Original :", eg2)
 print(eg2.reverse())  #inplace=True
-print("REversed :",eg2)
+print("REversed :",eg2) 
 
 sorted([5,2,1])
 sorted([7,4,9] + [12,7,32])
@@ -1004,3 +1004,1141 @@ from functools import partial
 pow(2,5)  #this is an inbuilt function
 two_pow = partial(pow,2)    #passed one argument and freezed it into a variable
 two_pow(5)    #call the freezed partial function with the remaining arguments
+
+# $Scopes
+#1 local
+#2 Parent local
+#3 Global
+
+# $variable scope confusing example 
+
+# $ ->local eg. (a variable defined inside a new scope has its own scope)
+print("\nScope Confusion")
+a=1
+def fn():
+  a=10
+  return a
+print(fn())  
+print(a)
+
+# $'nonlocal' keyword eg. (a variable defined with non local has it's parent's scope)
+def outer():
+  x = 'local'
+
+  def inner():
+    nonlocal x  #<- don't use if not required
+    x = 'non local'
+    print("\nInner x : ",x)
+  inner()
+  print("\nOuter x : ",x)
+
+outer()
+
+
+# $Example exercise for function
+def highest_even(li):
+  highest=0
+  for item in li:
+    new=item/2
+    if(item%2==0 and new > highest):
+      highest=new
+  print("\nHighest Even : ",highest*2)
+
+highest_even([10,2,5,3,79,4,80])
+
+
+
+# $Class
+# $'self' is compulsory in all functions
+class PlayerCharacter:
+
+    membership = True
+
+    def __init__(self, name):  #<-'self' is necessary
+        self.name = name
+        print("\nMembership :", self.membership)
+        print("Membership :", PlayerCharacter.membership)
+
+    @classmethod
+    def classMethod(cls, num1, num2):  #<-'cls' is necessary  #because it returns a new class object
+        return cls("Uttam")
+
+    @staticmethod
+    def staticMethod(num1, num2):
+        return num1 + num2
+
+    def run(self):  #<-'self' is necessary for accessing the class variable in the method declaration
+        print(f"\n{self.name} is Running")  #<-'self' needed
+
+
+player1 = PlayerCharacter("Parth")
+player2 = PlayerCharacter("Zeal")
+print("Player 1 :", player1.name)
+print("Player 2 Membership:", player2.membership)
+print("Player Membership :", PlayerCharacter.membership)
+player2.run()
+print("\n", player2.run())  #<-returns nothing (it prints it's stuff but returns nothing, obvious)
+
+player3 = PlayerCharacter.classMethod(2, 3)
+print(
+    "\nCalling class method and getting new player object with 'cls' method and getting name :",
+    player3.name)
+print("\nCalling static method :", PlayerCharacter.staticMethod(2, 3))
+
+# $There is no true privacy(public/private)
+# $we can tell ourselves by using conventions of private so that we don'e end up changing them
+
+
+class Dog():
+
+    _animal_type = 'Dog'
+
+    def __init__(self, breed, speed):
+        self._breed = breed
+        self._speed = speed
+
+    def run(self):
+        print(f"\n'{self._breed}' dog is running at {self._speed} km/hr")
+
+
+dog1 = Dog("joshua", 12)
+print("Dog1 animal type : ", dog1._animal_type)
+dog1.run()
+
+# $We can also alter the class methods and attributes
+dog1._animal_type = 'Cat'  #<-we should not change private attributes which are denoted by '_'
+print("Dog1 animal type : ", dog1._animal_type)
+
+# $we can also alter method strangly
+dog1.run = 'hello'
+print("Dog1 run method converted :", dog1.run)
+
+# $Inheritence
+print("\nInheritence example")
+
+#class User(object): #<-every class inherits from 'object' class by default and methods of object class are the 'dundar' methods ones with '__xyz__' schema
+class User():
+    def sign_in(self):  #<- 'self' is necessary
+        print("Signed in")
+
+
+class Wizard(User):  #<- provide 'Super' class in parameter to inherti
+    pass
+
+
+class Archer(User):
+    pass
+
+
+wizard = Wizard()
+print("Wizard signed in!", wizard.sign_in())    #print returns none ofcourse as method does not return anything
+archer = Archer()
+print("Archer signed in!", archer.sign_in())    #print returns none ofcourse as method does not return anything
+
+
+# $'isinstance' and 'issubclass'
+print(f"\nIs wizard an instance of Wizard class? {isinstance(wizard,Wizard)}")
+print(f"Is wizard an instance of User class? {isinstance(wizard,User)}")
+print(f"is wizard an instance of highest('object') class? {isinstance(wizard,object)}")   #object is the superclass of all objects
+print(f"is wizard a subclass of highest('object') class? {issubclass(Wizard,object)}")
+
+
+
+# $Super
+# $accessing the super class attribute(not method, method can be called directly through Inheritence)
+class A():
+  x=10
+
+  def __init__(self,type):
+    self.type = type
+    return self.type
+
+class B(A):
+  def __init__(self,name,type):
+    super().__init__(type) #<-call the super init method like this
+
+b = B("BBB","Human")
+print(f"Class B's type : {b.type}")
+
+
+class Pets():
+    animals = []
+    def __init__(self, animals):
+        self.animals = animals
+        
+
+    def walk(self):
+        for animal in self.animals:
+            print(animal.walk())
+
+class Cat():
+    is_lazy = True
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def walk(self):
+        return f'{self.name} is just walking around'
+
+class Simon(Cat):
+    def sing(self, sounds):
+        return f'{sounds}'
+
+class Sally(Cat):
+    def sing(self, sounds):
+        return f'{sounds}'
+
+#1 Add nother Cat
+class Cattie(Cat):
+    def sing(self, sounds):
+        return f'{sounds}'
+
+#2 Create a list of all of the pets (create 3 cat instances from the above)
+my_cats = [Simon("ccc",12),Sally('sss',10),Cattie('CCC',11)]
+
+#3 Instantiate the Pet class with all your cats use variable my_pets
+my_pets = Pets(my_cats)
+
+#4 Output all of the cats walking using the my_pets instance
+my_pets.walk()
+
+
+
+# $Decorators
+# $ability to use function names similar to variable calling(Higher Order Functions)
+# $Note: map,reduce,filter,zip functions are all the higher order functions i.e., calls the passed argument functions
+# $For example,
+def call_fun(passedfun):
+    return passedfun()    #->returns calling function
+
+def greet():
+    print('Calling \'fun\' as a variable')
+
+call(greet)  #<-function passed as variable name
+
+# $another way
+def call_ref(passedfun):
+    return passedfun     #->this time returns reference only, does not call
+
+def greet():
+    print('Calling \'fun\' as a variable')
+
+call_fun(greet)  
+x = call_ref(greet)       
+x()                     #<-therefore calling returned reference seperately from before
+
+# $Come to creating decorators
+# $Remember these super charges any function i.e., make it more powerful
+print("\nCreating our own decorators")
+def my_decorator(func):               #<-my decorator(super charger), accepts higher order function
+  def wrap_func():
+    print("***************")
+    func()
+    print("***************")
+
+  return wrap_func                    #-> should have returned just reference, but since it is used as a decorater, it's return statement will automatically call function
+
+@my_decorator
+def callll():
+  print("Just callin!") #<-sequence of thier run in unstable
+
+callll()
+
+
+# $we can also call decorator as such
+print("\nAnother method")
+another_one = my_decorator(callll)  
+print(another_one)
+
+# $Decorators with arguments
+print("\nCreating our own decorators with arguments")
+def my_decorator(func): #<-my decorator(super charger)
+  def wrap_func(greeting,emoji):
+    print("***************")
+    func(greeting,emoji)
+    print("***************")
+
+  return wrap_func
+
+@my_decorator
+def call_me(greeting, emoji):
+  print(greeting,emoji)
+
+call_me('Hello ', ':)')
+
+# $More flexible way to do this
+print("\nCreating our own decorators wit multiple arguments/types")
+def my_decorator(func): #<-my decorator(super charger)
+  def wrap_func(*args,**kwargs):   #here **kwargs is not used, these arguments are comming from the original function
+    print("***************")
+    print(args,"\n", kwargs)
+    func(*args,**kwargs)
+    print("***************")
+
+  return wrap_func
+
+@my_decorator
+def call_me(greeting, emoji=':)'): #<-variable + default 
+  print(greeting,emoji)
+
+call_me('Hello ')
+
+
+
+# Create an @authenticated decorator that only allows the function to run is user1 has 'valid' set to True:
+user1 = {
+    'name': 'Sorna',
+    'valid': True #changing this will either run or not run the message_friends function.
+}
+user2 = {
+    'name': 'Sorna',
+    'valid': False #changing this will either run or not run the message_friends function.
+}
+
+
+
+def authenticated(fn):
+  def wrapper(*args, **kwargs):
+    print(args[0])  #<-args is returned as a tuple
+    if args[0]['valid'] == True:
+      fn(*args, **kwargs)
+    else:
+      print("The user is not valid")  
+
+  return wrapper  
+  
+@authenticated
+def message_friends(user):
+  print('message has been sent')
+
+message_friends(user1)
+message_friends(user2)
+
+# $Time module
+import time
+time.sleep(5)
+print("Printing after 5 seconds, count 1 missisiipie, 2missisipie, ...5missisipie")
+time.time()     #for computer people
+time.ctime()    #for non computer people
+
+
+# $Measure performance of each function using decorator
+from time import time
+
+def performance(fn):
+  def wrapper(*args, **kwargs):
+    t1 = time()
+    result = fn(*args,**kwargs)
+    t2 = time()
+    print(f'Took {(t2-t1)*1000} seconds to complete')
+    return result
+  return wrapper
+
+@performance
+def my_function():
+  for i in range(1000):
+    i*2
+
+my_function()
+
+@performance
+def my_function():
+  for i in range(100000):
+    i*2
+
+my_function()    
+
+
+
+
+# Performance of the generators
+from time import time
+
+def performance(fun):
+  def wrapper():
+    t1 = time()
+    fun()
+    t2 = time()
+    print("\nTime to run : ", t2-t1, " seconds")
+  return wrapper
+
+@performance
+def long_time():
+  print("1", end="")
+  for i in range(100000):
+    i*2
+
+@performance
+def long_time2():
+  print("2", end="")
+  for i in list(range(100000)):
+    i*2
+
+long_time()
+long_time2()
+
+
+# $Use generators to save memory and time instead of lists
+# $when you have to calculate things one by one
+
+# $Comprehension of generators
+# def gen_fn(num):
+#   for i in range(num):
+#     yield i
+
+# # $comprehension
+# for item in gen_fn(100)  :
+#   print(item)  
+
+# $How 'range' works
+print("\nHow 'range' works")
+class MyRangeGen():
+  current = 0
+  def __init__(self, first, last):
+    self.first = first
+    self.last = last
+
+  def __iter__(self): #<-say that this is an iteraator and that __next__ dundar works on it
+    return self
+
+  def __next__(self):
+    if MyRangeGen.current < self.last:
+      num = MyRangeGen.current                #current should be remembered as a class object
+      MyRangeGen.current += 1             
+      return num
+    raise StopIteration
+
+gen = MyRangeGen(0,5)
+for i in gen: #<-'for' loop user 'next' and 'iter' dundar methods to run
+  print(i)  
+
+# $How 'for loops' work
+print("\nHow 'for' works")
+def special_iter(iterable):
+  iterator = iter(iterable)             #'iter' is used to make anything iterable and allow next function to work on it
+  while True:
+    try:
+      print(next(iterator))
+    except StopIteration:
+      break  
+
+special_iter([1,2,3])  
+
+# $fibonacci using generators
+print("\nFibonacci using generator")
+def fib(number):
+  a=0
+  b=1
+  for i in range(number):
+    yield a                             #'yield' is like return but sends out value and halts iteration at that point till 'next' is called which 'for' loop does
+    temp=a
+    a=b
+    b=temp+b
+for x in fib(5):
+  print(x)
+
+
+# $Generators
+# $'range()' is a Generator
+
+print("Range : ",range(100)) #<-takes much less memory
+print("\nLisdt : \n",list(range(100))) #<-takes much memory
+
+def create_list(num):
+  generated_list = []
+  for i in range(num):
+    generated_list.append(i)
+  return generated_list
+
+print("\nGenerated list this way : \n",create_list(100)) #<-same as list(range(100))
+
+# $Generators('range') can produce iterables('list'), but not vice-versa
+# $your own genertor and 'yield'
+print("\nOwn generator (and 'yield' functionality): ")
+def generator_function(num):
+  for i in range(num):
+    yield i
+
+g = generator_function(100)
+print (f'G(once) : {g}')
+print(f'G(next time) : {next(g)}')
+print(f'G(next time) : {next(g)}')
+
+
+# $Functional programming
+# $Pure functions
+# $         -should not change the outside data
+# $         -should not have any side effects
+
+my_list = [1,2,3]
+
+def multiply_by2(listt):
+  new_list = []
+  for item in listt:
+    new_list.append(item*2)
+  return new_list
+
+print(f"Multiply by 2 list : {multiply_by2(my_list)}")
+print(f"my_list : {my_list}")
+# $the original list was not altered ->i.e., good
+
+
+# $map,reduce,zip, filter
+''' 
+   $ ('map' and 'filter') will call the function for every element in corresponding list and 
+     pass list's value into called function, appending the results to 
+      - map object for 'map'
+      - filter object for 'filter' 
+   $ Pass function name as higher order function
+'''
+
+# $map
+# $Pass function name as higher order function
+# $'map' is a pure function i.e., original list is not affected
+# $there is another 'map' function in DataFrame.map that follows diff. syntax
+
+# $Example 1
+my_list = [1,2,3]
+def multiply_by2(x):
+  return x*2            #append this items in 'map' object
+
+print("\nThrough mapping :",list(map(multiply_by2, my_list)))
+
+# $Note: since we're passing higher order function, we can use lambda functions
+print("\nThrough mapping :",list(map(lambda x: x*2, my_list)))
+
+# $Example 2
+my_list = ['surat', 'vadodara', 'ahmedabad']
+print(list(map(str.upper, my_list)))
+
+# $filter
+my_list = [1,2,3]
+def only_odd(x):
+  return x%2!=0        #append 'True' items 'values' only in 'filter' object
+
+print("\nThrough filtering :",list(filter(only_odd, my_list))) 
+
+
+# $zip #<-zip each consecutive items of each iterable into a tuple and returns another list
+my_list = [1,2,3]
+your_list = [10,20,30]
+
+print("\nThrough zipping :",list(zip(my_list,your_list)))
+
+
+# $reduce (not a python built in function) #<-map,zip,etc are built with reduce
+print("\nThrough reduce :")
+from functools import reduce
+my_list = [1,2,3]
+
+def accumulator(acc,item):
+  print(acc, item)
+  return acc+item
+
+print(reduce(accumulator, my_list, 0)) #<-0 is given as the initial value here
+
+
+
+# $lamda functions #<-functions that we have to use only once and throw away
+''' Usage: When we make function call as higher order functions'''
+# $let's say we don't really need out memory to keep the function 'multiply_by2' since it has to be only performed once, so we change that function to a lambda function
+# $ syntax : labda my_list_item: my_list_item*2
+# $no name attached to lamda function, just input parameters and output action
+# $ lambda parameter: action(parameter)
+
+# $Example
+print("\nUsing labda function")
+my_list = [1,2,3]
+print(list(map(lambda my_list_item:my_list_item*2, my_list)))
+print(list(filter(lambda my_list_item:my_list_item%2==0, my_list)))
+print(reduce(lambda acc,my_list_item:acc+my_list_item, my_list,0))
+
+# $now using labda function, we just cleaned up a lot of code that occupies our file
+
+# $Exercise lamda, square the list
+print("\nSquare list using labda function")
+my_list = [1,2,3]
+print(list(map(lambda my_list_item:my_list_item **2, my_list)))
+
+
+# $Exercise labda, sort using 2nd value of tuple in a list
+print("\nSorting using 2nd item in tuple in list using labda function")
+a=[(0,2),(4,3),(10,-1),(9,9)]
+a.sort(key = lambda item_a: item_a[1])
+print(a) 
+
+
+def multiplexers():
+	return [lambda n: index * n for index in range (4)]
+
+print [m (2) for m in multiplexers ()]
+
+
+
+
+# $list,set,dictionary comprehension
+# $Way to create data structures very fast
+my_set1 = [char for char in 'Hello']
+print(my_set1)
+my_set2 = {value for value in range(1,10)}
+print(my_set2)
+my_set3 = {value*2 for value in range(1,10)}
+print(my_set3)
+my_set4 = {value**2 for value in range(1,10)}
+print(my_set4)
+
+print("\nList and set comprehension")
+print(f'{my_set1}\n{my_set2}\n{my_set3}\n{my_set4}')
+
+print("\nDictionary comprehension")
+simple_dictionary = {
+  'a':2,
+  'b':5
+}
+
+new_dictionary = { key:value for key,value in simple_dictionary.items() if value%2==0} #<-interesting
+print(new_dictionary)
+
+# $Exercise, create a dictionary using comprehension with a list(k=listitem, v = listitem*2)
+print("\nExample dictionary from list")
+my_list = [1,2,3]
+new_dictionary = {k:k*2 for k in my_list}
+print(new_dictionary)
+
+# $Exercixe, create newlist containing only repeated items from a list
+print("Displaying items that are multiple from a list")
+my_list = ['a','b','c','b','d','m','n','n']
+
+duplicates=[]
+new_list = set([item for item in my_list if my_list.count(item)>1])
+print(new_list)
+
+
+# context managers
+# default context manager for file system 'with'
+with open("Some_Code.txt") as f:
+  data = f.read();
+
+# $custom context manager for any type of operation eg., making database connections
+# $this for file management  
+class FileManager(): 
+    def __init__(self, filename, mode): 
+        self.filename = filename                #define required process arguments
+        self.mode = mode 
+        self.file = None
+          
+    def __enter__(self): 
+        self.file = open(self.filename, self.mode)  #make connections/utilise resources
+        return self.file
+      
+    def __exit__(self, exc_type, exc_value, exc_traceback):   #dump resources and parameters handle execptions
+        self.file.close() 
+  
+# loading a file  
+with FileManager('Some_Code.txt', 'r') as f: 
+    f.read() 
+  
+print(f.closed) 
+
+# $bottle templates
+from bottle import template
+
+print(template('The answer is {{x}}', x=10))
+print(template('The answer is {{x**2}}', x=10))
+
+lastname= 'lathiya'
+first_names = 'parth twinkle chirag'.split()
+family_template = '''The {{lastname.title()}} Family'''
+print(template(family_template, lastname=lastname))
+
+new_family_template = '''The {{lastname.title()}} Family
+{{'=' * (len(lastname)+11)}}'''
+print(template(new_family_template, lastname=lastname))
+
+#Note: '%' symbol is used to run statements, we use {{}} for running expressions
+whole_family_template = '''The {{lastname.title()}} Family
+{{'=' * (len(lastname)+11)}}
+%for firstname in first_names:
+* {{firstname.title()}}
+%end
+'''
+#we need to specify end because we are using template
+print(template(whole_family_template, lastname=lastname, first_names=first_names))
+
+# $Testing
+# test with: mypy: for type checking
+#      with: pyflakes: for redundant/missing imports and spelling mistakes
+#      with doc test: to check the documentation example
+#      with: pytest: for checking corner test cases
+# use itertools to apply test case scenerios for pytest
+from itertools import *     #import *'s only in terminals to reduce typing work, not in actual python files
+for t in product('ABC', 'DE', 'xyz'):
+      print(t)    #returns 3*2*3 results
+for t in permutations('Love'):
+      print(t)    #repeated groups gets included even if items are in different order, #used to check the actions of the users in any order as security matter
+for t in permutations('Love',2):  #taken 2 at a time
+      print(t)
+for t in combinations('Love',2):  #repeated group does not get included even if items are in different order
+      print(t)
+
+# $Tools
+# $Web scraping
+# $Python Requests : (to handle sessions and make HTTP requests) and
+# $Beautiful Soup (for parsing the response and navigating through it to extract info) to be perfect pair.We used requests to get the page from the AllSides server, but now we need the BeautifulSoup library (pip install beautifulsoup4) to parse HTML and XML. When we pass our HTML to the BeautifulSoup constructor we get an object in return that we can then navigate like the original tree structure of the DOM.
+# $Scrapy : For bigger scraping projects (where I have to collect and process a lot of data and deal with non-JS related complexities)
+# $Selenium : For JavaScript-heavy sites (or sites that seem too complex)
+
+# $Let's write a simple Python function to get this value. We'll use BeautifulSoup for parsing the HTML.
+# $data from :  Socialblade's Real-time Youtube Subscriber Count Page
+# $From visual inspection, we find that the subscriber count is inside a <p> tag with ID 'rawCount'
+# $'BeautifulSoup' for parsing the HTML.
+# $Getting html content as a string
+import requests
+
+url = 'https://www.learndatasci.com/tutorials'
+r = requests.get(url)
+data = str(r.content[:100])
+print(f'First 100 code characters from any website : {data}')
+
+# $Beautiful soup example
+# $Request and response
+from bs4 import BeautifulSoup
+r = requests.get('https://www.allsides.com/media-bias/media-bias-ratings')
+soup = BeautifulSoup(r.content, 'html.parser')
+rows = soup.select('tbody tr')
+
+# $Get all table rows
+row = rows[0]
+print("\n\n\n\nRow : ",row)
+
+# $Retriving the data
+print("\nRetriving the data")
+# $Get <td> element of '.source-title' class and get the text part from it
+name = row.select_one('.source-title').text.strip() #.text gets all the text from the code(not the actual html code)
+print("\nName (td) : ",name)
+
+# Get the same '.source-title' 'text' html link
+allsides_page = row.select_one('.source-title a')['href']
+allsides_page = 'https://www.allsides.com' + allsides_page
+print("It's html url : ",allsides_page)
+
+# $Get another 'td's 'image' html link
+bias = row.select_one('.views-field-field-bias-image a')['href']
+print("Bias Image link : ",bias)
+bias = bias.split('/')[-1]
+print("Bias Image end loc(inside server) : ",bias)
+
+# $Get another 'td's agree/disagree count
+agree = row.select_one('.agree').text
+agree = int(agree)
+disagree = row.select_one('.disagree').text
+disagree = int(disagree)
+print(f"Agree: {agree}, Disagree: {disagree}")
+
+# $It shows up as None because this element is rendered with Javascript and requests can't pull HTML rendered with Javascript
+print("Can't show content rendered with javascript : ",row.select_one('.community-feedback-rating-page'))
+
+# $So is there other way to get that info??
+# $To find the JS files they're using, just CTRL+F for ".js" in the page source and open the files in a new tab to look for that logic.
+# $It turned out the logic was located in the eleventh JS file and they have a function that calculates the text and color with normal switch case taking 'agree_ratio' as the parameter. Now we can write a function to replicate that same logic since we have the ratio
+agree_ratio = agree / disagree
+def get_agreeance_text(ratio):
+    if ratio > 3: return "absolutely agrees"
+    elif 2 < ratio <= 3: return "strongly agrees"
+    elif 1.5 < ratio <= 2: return "agrees"
+    elif 1 < ratio <= 1.5: return "somewhat agrees"
+    elif ratio == 1: return "neutral"
+    elif 0.67 < ratio < 1: return "somewhat disagrees"
+    elif 0.5 < ratio <= 0.67: return "disagrees"
+    elif 0.33 < ratio <= 0.5: return "strongly disagrees"
+    elif ratio <= 0.33: return "absolutely disagrees"
+    else: return None
+    
+print("Community (got via .js file) : ",get_agreeance_text(agree_ratio))
+
+
+# $Now let's get all the data into a dictionary in list
+data= []
+
+for row in rows:
+    d = dict()
+    
+    d['name'] = row.select_one('.source-title').text.strip()
+    d['allsides_page'] = 'https://www.allsides.com' + row.select_one('.source-title a')['href']
+    d['bias'] = row.select_one('.views-field-field-bias-image a')['href'].split('/')[-1]
+    d['agree'] = int(row.select_one('.agree').text)
+    d['disagree'] = int(row.select_one('.disagree').text)
+    d['agree_ratio'] = d['agree'] / d['disagree']
+    d['agreeance_text'] = get_agreeance_text(d['agree_ratio'])
+    
+    data.append(d)
+
+print("\n\n\nData:")
+print(data[0])  
+
+# $Now let's get all data from all 3 pages simpultaneously
+pages = [
+    'https://www.allsides.com/media-bias/media-bias-ratings',
+    'https://www.allsides.com/media-bias/media-bias-ratings?page=1'
+]
+
+# $According to AllSides' robots.txt we need to make sure we wait ten seconds before each request.Our loop will:
+#$    request a page
+#$    parse the page
+#$    wait ten seconds
+#$    repeat for next page.
+
+from time import sleep
+
+all_data= []
+i=0
+for page in pages:
+    print("\n\nIter : ",i)
+    i+=1
+    r = requests.get(page)
+    soup = BeautifulSoup(r.content, 'html.parser')
+    
+    rows = soup.select('tbody tr')
+
+    for row in rows:
+        d = dict()
+
+        d['name'] = row.select_one('.source-title').text.strip()
+        d['allsides_page'] = 'https://www.allsides.com' + row.select_one('.source-title a')['href']
+        d['bias'] = row.select_one('.views-field-field-bias-image a')['href'].split('/')[-1]
+        d['agree'] = int(row.select_one('.agree').text)
+        d['disagree'] = int(row.select_one('.disagree').text)
+        d['agree_ratio'] = d['agree'] / d['disagree']
+        d['agreeance_text'] = get_agreeance_text(d['agree_ratio'])
+
+        all_data.append(d)
+    
+    sleep(10)
+
+print("\nAll data length :", len(all_data))
+
+# $Store and retrive data to/from local disk file
+import json
+with open('allsides.json', 'w') as f:
+    json.dump(all_data, f)
+
+with open('allsides.json', 'r') as f:
+    data2 = json.load(f)
+
+# $Visualising data(dictionary) with pandas
+import pandas as pd
+
+df = pd.read_json(open('allsides.json', 'r'))
+df.set_index('name', inplace=True)
+df.head()
+
+df[df['agreeance_text'] == 'strongly disagrees']
+
+# $Error handeling
+while True:
+  try:
+    age = input("\nEnter your age : ")
+    print(int(age))
+  except ValueError :
+    print("Please enter a number!")
+    continue
+  except TypeError :
+    print("Please enter a correct type!")  
+    continue
+  else:
+    print("Thank you !")
+    break    
+  finally:
+    print("Ok, i'm done here")
+
+
+def sum(num1, num2):
+  try:
+    return num1+num2
+  except (TypeError,ZeroDivisionError) as err:
+    print("\nProgram error : ",err)
+
+print(sum(1,'2'))  
+
+# $ Assertions
+# assertions are just use to verify the values at a given point of time to cross check for debugging, it crashes the program at the point where the assertion fails by adding exception
+assert 5+3 == 8   #runs perfectly fine as the assumption 8 is correct
+assert 5+3 == 9   #crashes with an 'AssertionError' statement
+
+
+
+# $Regular expressions(Search for particulat thing in the text)
+import re
+
+string = "this search inside of this text please!"
+print(f"Search present : {'search' in string}")
+
+# $Search using pattern
+print("\nSearch using pattern")
+pattern = re.compile("this")
+a = pattern.search(string) #<-returns an 'match' object
+print("a : ",a)
+print("a start index : ", a.start())
+print("a end index : ", a.end())
+
+print("\nFind all instances :", pattern.findall(string))
+print("\n Simple match : ",pattern.match(string))
+print("\n Full match : ",pattern.fullmatch(string))
+
+
+# $Email validation
+print("\nEmail validation using patterns")
+email_pattern = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+email = "plathiya2611@gmail.com"
+
+a = email_pattern.search(email)
+print("a : ",a)
+
+# $Password validation
+print("\nPassword validation(atleast 8 chars, any letters, numbers, $%#@)")
+password_pattern = re.compile(r"[^(a-zA-Z0-9)0-9$%#@)]{8,}]")
+password = "Winner"
+b = password_pattern.search(password) #<-this for some reason is not working
+print("b : ",b)
+
+
+# $Security Hash functions 
+import hashlib
+
+hashlib.md5('The tale of two cities')   #gives encoding error as md5 does not accept string but encoded string
+hashlib.md5('The tale of two cities'.encode('utf-8'))   #returns hash object
+hashlib.md5('The tale of two cities'.encode('utf-8')).digest()  #the md5 en-coded string
+hashlib.md5('The tale of two cities'.encode('utf-8')).hexdigest() #the md5 en-coded string in hex
+
+# hashlib is insecure now, came sha
+hashlib.sha1('The tale of two cities'.encode('utf-8'))
+hashlib.sha1('The tale of two cities'.encode('utf-8')).digest()
+hashlib.sha1('The tale of two cities'.encode('utf-8')).hexdigest()
+
+hashlib.sha256('The tale of two cities'.encode('utf-8')).digest()
+hashlib.sha512('The tale of two cities'.encode('utf-8')).digest()
+
+#still not secure with GPU's processing, so we do it multiple times
+b = 'The tale of two cities'.encode('utf-8')
+b = hashlib.sha512(b).digest()
+b = hashlib.sha512(b).digest()
+b = hashlib.sha512(b).digest()
+b = hashlib.sha512(b).digest()
+
+#might be efficient, but we have better encryption, i.e., pbkdf2_hmac
+#that just makes the slows down the forward password gussing attacks slower
+p = 'The tale of two cities'.encode('utf-8')
+hashlib.pbkdf2_hmac('sha256',p,b'some company phrase', 10000)
+hashlib.pbkdf2_hmac('sha256',p,b'some other phrase', 10000)   #this makes another hash unique to each company
+
+# $Another common  security concern preservation with simple strings reserving the addition of tokens and its style
+s = 'the quick'
+t = 'brown fox'
+s+t     #combining tokens to login in the website
+
+#hacker can know the final string and combine it any ways
+s = 'the '
+t = 'quick brown fox'
+s+t     #since the hacker can also reach the final point from anywhere, security is vulnerable
+
+#quick fix -> make a tuple repr of tokkens
+s = 'the quick'
+t = 'brown fox'
+repr((s,t))
+
+#now if a hacker got all tokkens and tries to combine them to access login
+s = 'the '
+t = 'quick brown fox'
+repr((s,t)) #he obtains a different object from before although he has all the tokens
+
+#///////////////////////////////// Python Basics  ///////////////////////
+#////////////////////////////////////////////////////////////////////////
+
+# next file :
+# $When we create a package, the __init__.py file es created to let the package know it is a python package
+# next file :
+import utility
+import  shopping.shopping_cart
+
+if __name__ == '__main__':
+
+    print("\nRun this code")
+    print(shopping.shopping_cart.buy('apple'))
+    
+    print("\nDefault name of the file that we run is '", __name__, "'")
+    # $That can be seen in the 'type' member function
+    class Student():
+        pass
+
+    import utility
+    print("Type of object", type(utility))     #<- shows this object is in the utility module")
+
+    import random
+    print(f'\nRandom : {random.random()}')
+    print(f'Random Int(between) : {random.randint(1,10)}')
+    my_list = [1,2,3,4,5]
+    print(f'Random choice: {random.choice(my_list)}')
+    random.shuffle(my_list)
+    print("Shuffled list : ", my_list)
+
+
+# next file :
+# $Utility functions
+def sum(*args):
+    sum=0
+    for item in args:
+        sum+=item
+    return sum
+
+
+# next file :
+# $Send email using smtp server
+import smtplib
+from email.message import EmailMessage
+
+email = EmailMessage()
+email['from'] = 'Zacon'
+email['to'] = 'plathiya2611@gmail.com'
+email['subject'] = "Information about Zacon!"
+email.set_content(('I am a python Master'))
+
+with smtplib.SMTP(host='smtp.gmail.com', port=587) as smtp:
+    smtp.ehlo()
+    smtp.starttls() #adding encryption
+    smtp.login('lucifer26111990@gmail.com', 'Nathikhabar')  #this might not work if two factor authentication is on or if google setting: Allow users to manage their access to less secure apps, not enabled
+    smtp.send_message(email)
+    print("sent!")
+
+
+# next file :
+# $Working with file i/o
+
+import os
+print(os.listdir("./"))       #returns list of directory names only
+
+import glob
+print(glob.glob('./*.py'))    #returns all files of type specified but with it's format/path specified in the search string, just replacing the *
+
+print()
+
+
+my_file = open('text.txt')
+
+# $Analysing the cursor position
+print("\nAnalysing the cursor position")
+print(my_file.read())
+print(my_file.read())   #<-returns nothing as the cursor has moved to the end of the file
+print(my_file.read())   #<-returns nothing as the cursor has moved to the end of the file
+
+print("\nRedirecting the cursor position")
+my_file = open('text.txt')
+print(my_file.read())
+my_file.seek(0)
+print(my_file.read())   #<-returns nothing as the cursor has moved to the end of the file
+
+print(my_file.readline())
+print(my_file.readline())
+
+my_file.close()
+
+# $standard way to work with files
+print("\nAppending the file from the cursor position")
+try:
+    with open('text.txt',mode="r+") as my_file:
+        text = my_file.write("Hey! How you doin...")
+        print(text)
+        print("Via simple filename :",my_file.read())   #<-this way you don't need to close the file
+except FileNotFoundError:
+    print("File not found")
+except IOError:
+    print("Some error while input/output")
+
+# $Default file path from the current working directory example
+print("\nGetting the file via 'windows' file syntax using escape character to escape the escape character")
+with open(".\\text\\text.txt", mode='r') as my_file2:
+    print("Via file path : ",my_file2.read())
+
+# $("..\\text\\text.txt", mode='r') #<-to go back one directory and then search the file
+
+
+# next file :
+# Pythono3 code to rename multiple 
+# files in a directory or folder 
+import os 
+
+# Function to rename multiple files 
+# def main():
+#   i=0
+#   for filename in os.listdir(os.getcwd):
+#     dst =str(i) + ".jpg"
+# 	  src =filename
+# 	  os.rename(src, dst)
+# 	  i += 1
+#   print(str(i)) 
+	
+
+
+# Driver Code 
+if __name__ == '__main__': 
+	
+	# Calling main() function 
+	main() 
+
+
+# next file :
+# Improting Image class from PIL module  
+from PIL import Image 
+import PIL 
+import os
+import cv2
+  
+for i,x in enumerate(os.listdir("../ml/projects/dogs_vs_cats_image_classification/extracted_data/dogs_vs_cats/train/dog/")):
+    # Opens a image in RGB mode  
+    
+    # change names
+    # xx = str(i)+".jpg"
+    # src = "../ml/projects/dogs_vs_cats_image_classification/extracted_data/dogs_vs_cats/train/dog/"+x
+    # des = "../ml/projects/dogs_vs_cats_image_classification/extracted_data/dogs_vs_cats/train/dog/"+xx
+    # os.rename(src,des)
+
+    # reshape
+    # im = Image.open("../ml/projects/dogs_vs_cats_image_classification/extracted_data/dogs_vs_cats/train/"+str(i)+".jpg")  
+    image = cv2.imread("../ml/projects/dogs_vs_cats_image_classification/extracted_data/dogs_vs_cats/train/dog/"+x, 1) 
+    # newsize = (150, 150) 
+    resized = cv2.resize(image,(150,150))
+    # im = im.resize(250,250, Image.LANCZOS)
+    print('Done! ')
+
+    cv2.imwrite("../ml/projects/dogs_vs_cats_image_classification/extracted_data/dogs_vs_cats/train/dog/"+x,resized)
+    # image.save("../ml/projects/dogs_vs_cats_image_classification/extracted_data/dogs_vs_cats/train/"+str(i)+".jpg")
+
+
+
+# next file :
+# $use OpenCV for reading and writing files (intermediate:array_form)
+import urllib.request
+import cv2
+import numpy as np
+import os
+
+def store_raw_images():
+    neg_images_link = 'http://image-net.org/api/text/imagenet.synset.geturls?wnid=n12478768'   
+    neg_image_urls = urllib.request.urlopen(neg_images_link).read().decode()
+    pic_num = 1
+    
+    if not os.path.exists('neg'):
+        os.makedirs('neg')
+        
+    for i in neg_image_urls.split('\n'):
+        try:
+            print(i)
+            urllib.request.urlretrieve(i, "neg/"+str(pic_num)+".jpg")
+            img = cv2.imread("neg/"+str(pic_num)+".jpg",cv2.IMREAD_GRAYSCALE)
+            # should be larger than samples / pos pic (so we can place our image on it)
+            resized_image = cv2.resize(img, (100, 100))
+            cv2.imwrite("neg/"+str(pic_num)+".jpg",resized_image)
+            pic_num += 1
+            
+        except Exception as e:
+            print(str(e))
