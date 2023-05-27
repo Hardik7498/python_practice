@@ -153,7 +153,7 @@ sample(range(100), k=2)
 from collections import Counter
 
 Counter(choices(outcomes, k=100))
-Counter(choices(outcomes,[5,4,3,2,1], k=100))     
+Counter(choices(outcomes,[5,4,3,2,1], k=100))   
 
 #shuffle
 outcomes
@@ -226,7 +226,7 @@ sum(trial() for x in range(total_numbers))/total_numbers
 
 #------------------ 2.2 Part 2 -----------------
 #----> Bootstrapping to estimate the confidence interval on a sample of data
-build a 90% confidence interval for means in a dataset
+#build a 90% confidence interval for means in a dataset
 timings = [7.18, 8.59, 12.24, 7.39, 8.19, 8.69, 6.98, 8.31, 9.06, 7.06, 7.67, 10.02, 6.68, 9.07]
 
 from statistics import mean, stdev
@@ -563,7 +563,7 @@ print(my_dict)
 x = {'a':1, 'b':2}
 y = {'b':3, 'c':4}
 z={**x, **y}
-z           
+z                   
 #-------> grouping items by length into a dictionary
 users = ['parth', 'helly', 'nidhi', 'bhoomit']
 

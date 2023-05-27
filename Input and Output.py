@@ -9,7 +9,7 @@ print("Multiplication is", res)
 print('My', 'Name', 'Is', 'James', sep='**')
 
 # Convert Decimal number to octal using print() output formatting
-num = 8
+num = 10
 print('%o' % num)
 
 # Display float number with 2 decimal places using print()
@@ -32,7 +32,7 @@ print("User List:", numbers)
 
 #Write all content of a given file into a new file by skipping line number 5
 # read test.txt
-with open("test.txt", "r") as fp:
+with open("test.txt", "r")as fp:
     # read all lines from a file
     lines = fp.readlines()
 

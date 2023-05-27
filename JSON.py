@@ -39,7 +39,11 @@ sampleJson = """{
          "name":"emma",
          "payble":{ 
             "salary":7000,
+<<<<<<< Updated upstream
             "bonus":800
+=======
+            "bonus":700
+>>>>>>> Stashed changes
          }
       }
    }

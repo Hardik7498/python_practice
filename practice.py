@@ -86,7 +86,7 @@ print("Welcome ", name , ". You are ", str(age) , " years old.")        #also ca
 print(f"Welcome {name}. You are {age} years old.")                      #also can print like this
 print("Welcome {}. You are {} years old.".format(name,age))
 print("Welcome {1}. You are {0} years old.".format(name,age))
-print("Welcome {_name}. You are {_age} years old.".format(_name="P",_age=25))
+print("Welcome {_name}. You are {_age} years old.".format(_name="m",_age=))
 
 
 
@@ -323,8 +323,8 @@ for _ in range(0,2):
 # $join
 print("\nJoin operation")
 sentence = '-'
-print(sentence.join(['hi','my','name','is','Parth']))   #does not add before first and after last
-print(' '.join(['hi','my','name','is','Parth']))
+print(sentence.join(['hi','my','name','is','meet']))   #does not add before first and after last
+print(' '.join(['hi','my','name','is','']))
 
 # $split, default split is by white space
 'Hello there, how are you'.split()
@@ -705,8 +705,8 @@ print("\n", list(range(5,100)))
 # $join
 print("\nJoin operation")
 sentence = '!'
-print(sentence.join(['hi','my','name','is','Parth']))
-print(' '.join(['hi','my','name','is','Parth']))
+print(sentence.join(['hi','my','name','is','meet']))
+print(' '.join(['hi','my','name','is','meet']))
 
 
 # $List unpacking
@@ -807,7 +807,7 @@ y,yy = 20,0
 print(f"x:{bool(x)}, xx:{bool(xx)},\ny:{bool(y)}, yy:{bool(yy)}")
 
 # $Check is username or password exists
-username = "Parth"
+username = "meet"
 password = '123'
 
 if username and password:
@@ -815,7 +815,7 @@ if username and password:
 else:
   print("\nusername,password don't exists")
 
-username = "Parth"
+username = "meet"
 password = ''
 print("Current password :", bool(password))
 if username and password:
@@ -885,7 +885,7 @@ for item in [1,2,3]:
   print(item)
 
 for item in {1,2,3}:    
-  print(item)  
+  print(item)   
 
 for item in (1,2,3):    
   print(item)
@@ -1215,7 +1215,7 @@ def call_fun(passedfun):
 def greet():
     print('Calling \'fun\' as a variable')
 
-call(greet)  #<-function passed as variable name
+call (greet)  #<-function passed as variable name
 
 # $another way
 def call_ref(passedfun):

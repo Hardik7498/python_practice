@@ -346,7 +346,7 @@ print("is y superset of x? :", your_set.issuperset(my_set))
 basket = ['a','x','b','c','d','e','d']
 basket.sort()
 basket.reverse()
-print("Reversing again :", basket[::-1]) #inplace=False due to slicing
+print("Reversing again :", basket[::-1]) 
 print("Original list   :", basket)
 
 print("\nRange")
@@ -1403,7 +1403,7 @@ lock.acquire()
 try:
     print('Critical Section 1')
     print('Critical Section 2')
-finally:
+finally:  
     lock.release()
 
 
@@ -1470,3 +1470,5 @@ for part in zip(*[iter('abadffghi')] * 3):
     di = dict()
     result5 = "".join([di.setdefault(char, char) for char in part if char not in di])
     print(result5)
+
+set={7,3,4,5}
